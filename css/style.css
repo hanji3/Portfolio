@@ -1,0 +1,559 @@
+/* 01. 기본 색상과 전체 설정 */
+:root {
+    --bg: #ffffff;
+    --text: #15243c;
+    --muted: #778397;
+    --line: #e7ebf0;
+    --card: #edf2f6;
+    --accent: #7b9fbd;
+    --header-bg: rgba(255,255,255,.76);
+}
+/* 다크 모드에서는 본문 배경과 글씨를 변경합니다. */
+body.dark {
+    --bg: #101d32;
+    --text: #ffffff;
+    --muted: #c0ccdc;
+    --line: #35445c;
+    --card: #23334c;
+    --accent: #9cc8ea;
+    --header-bg: rgba(16,29,50,.82);
+}
+* {
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px;
+}
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Pretendard', sans-serif;
+    transition: background .35s, color .35s;
+}
+a {
+    color: inherit;
+    text-decoration: none;
+}
+button {
+    font: inherit;
+    cursor: pointer;
+}
+img {
+    display: block;
+    width: 100%;
+}
+/* 02. 헤더: 최상단은 투명, 스크롤 시 반투명 */
+.header {
+    position: fixed;
+    z-index: 20;
+    inset: 0 0 auto;
+    height: 86px;
+    padding: 0 clamp(24px, 4vw, 80px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    transition: background .3s, color .3s, box-shadow .3s;
+}
+.header.scrolled {
+    background: var(--header-bg);
+    color: var(--text);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 1px 0 var(--line);
+}
+.logo {
+    display: flex;
+    align-items: center;
+    width: 100px;
+    min-height: 50px;
+}
+.logo img {
+    max-height: 55px;
+    object-fit: contain;
+}
+.nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(18px, 2.5vw, 44px);
+}
+.nav a {
+    font-size: 20px;
+    font-weight: 500;
+    transition: opacity .2s;
+}
+.nav a:hover {
+    opacity: .65;
+}
+.theme-toggle {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    background: transparent;
+}
+/* 직접 만든 PNG 아이콘의 투명 여백을 유지하면서 크기 맞춤 */
+.theme-toggle img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+.theme-toggle .sun {
+    display: none;
+}
+
+/* 라이트모드에서 스크롤 후 흰색 헤더 위 아이콘이 보이도록 남색 처리 */
+body:not(.dark) .header.scrolled .theme-toggle .moon {
+    filter: brightness(0) saturate(100%) invert(10%) sepia(19%) saturate(1543%) hue-rotate(178deg);
+}
+body.dark .theme-toggle .moon {
+    display: none;
+}
+body.dark .theme-toggle .sun {
+    display: block;
+}
+/* 03. 메인 이미지: hero.png를 넣으면 자동으로 적용됩니다. */
+.hero {
+    height: 100svh;
+    min-height: 620px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    background: #7bacc7;
+    color: #fff;
+    overflow: hidden;
+}
+.hero-shade {
+    display: none;
+
+/* 왼쪽에만 은은한 그림자 적용 */
+    background: linear-gradient(
+        90deg,
+        rgba(7, 30, 57, 0.18),
+        transparent 75%
+    );
+}
+.hero-content {
+    position: relative;
+    width: 100%;
+    padding: 0 clamp(24px, 6vw, 116px) clamp(175px, 23vh, 255px);
+}
+/* 메인 타이틀: 글자 전체가 아래에서 서서히 올라오도록 설정 */
+.hero h1 {
+    font-size: clamp(64px, 11.2vw, 210px);
+    font-weight: 600;
+    letter-spacing: -.085em;
+    line-height: .95;
+    margin: 0;
+    /* 글씨 색상 */
+    color: #FFFFFF;
+
+    /* 글씨에만 그림자 적용 */
+    text-shadow:
+        0 2px 3px rgba(16, 45, 70, 0.15),
+        0 5px 12px rgba(16, 45, 70, 0.15);
+
+    /* 기존 서서히 올라오는 애니메이션 */
+    animation: heroReveal 1.65s .2s both
+        cubic-bezier(.2, .8, .2, 1);
+}
+
+/* 위쪽 작은 문구도 먼저 부드럽게 나타나도록 설정 */
+.hero-caption {
+    font-size: clamp(13px, 1.2vw, 17px);
+    letter-spacing: .03em;
+    margin-top: 0;
+    margin-bottom: 26px;
+    text-shadow: 0 2px 6px rgba(10, 35, 65, 0.4);
+    animation: heroReveal 1.4s .1s both cubic-bezier(.2,.8,.2,1);
+    position: relative;
+    left: 15px;
+}
+
+/* 기존 스타일처럼 전체가 아래에서 올라오면서 선명해지는 효과 */
+@keyframes heroReveal {
+    from {
+        opacity: 0;
+        transform: translate(-28px, 65px);
+        filter: blur(9px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(0, 0);
+        filter: blur(0);
+    }
+}
+
+.scroll-hint {
+    position: absolute;
+    bottom: 36px;
+    right: clamp(24px, 4vw, 80px);
+    font-size: 11px;
+    letter-spacing: .16em;
+}
+.scroll-hint span {
+    margin-left: 16px;
+    font-size: 19px;
+}
+/* 04. 섹션 공통 디자인 */
+.section {
+    padding: clamp(105px, 12vw, 190px) clamp(24px, 6vw, 116px);
+}
+.section-heading {
+    margin-bottom: 65px;
+}
+.section-index, .small-label {
+    font-size: 12px;
+    letter-spacing: .16em;
+    color: var(--muted);
+    font-weight: 600;
+}
+.section h2 {
+    margin: 20px 0 14px;
+    font-size: clamp(48px, 7vw, 104px);
+    font-weight: 600;
+    letter-spacing: -.065em;
+    line-height: 1.08;
+}
+.section-heading > p {
+    color: var(--muted);
+    font-size: 16px;
+}
+.period {
+    color: var(--accent);
+}
+/* 05. Work: 2열 카드, 4개 프로젝트 */
+.work-grid {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 70px 26px;
+}
+.work-image {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--card);
+}
+.work-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .7s ease;
+}
+.work-card:hover img {
+    transform: scale(1.045);
+}
+.play {
+    position: absolute;
+    right: 22px;
+    bottom: 18px;
+    font-size: 29px;
+    color: #fff;
+    text-shadow: 0 1px 10px #333;
+}
+.work-info {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 15px;
+    padding-top: 19px;
+}
+.work-info h3 {
+    margin: 0;
+    font-size: 23px;
+    font-weight: 600;
+}
+.work-info span {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: .09em;
+}
+/* 06. About: 좌측 문장, 우측 사진과 소개 */
+.about {
+    border-top: 1px solid var(--line);
+}
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9vw;
+    align-items: start;
+}
+.about-statement p {
+    font-size: clamp(33px, 3.9vw, 70px);
+    font-weight: 600;
+    letter-spacing: -.065em;
+    line-height: 1.45;
+    margin: 0;
+}
+.about-statement em {
+    color: var(--accent);
+    font-style: normal;
+}
+.about-profile {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 30px;
+    align-items: start;
+}
+.portrait {
+    width: 200px;
+    max-width: 100%;
+    background: var(--card);
+    aspect-ratio: 3/4;
+    overflow: hidden;
+}
+.portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.about-copy h3 {
+    font-size: 24px;
+    margin: 17px 0 22px;
+}
+.about-copy h3 span {
+    display: block;
+    margin-top: 5px;
+    font-size: 11px;
+    letter-spacing: .1em;
+    color: var(--muted);
+}
+.about-copy p {
+    line-height: 1.9;
+    font-size: 15px;
+    color: var(--muted);
+    margin: 0;
+}
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    margin-top: 35px;
+}
+.skills span {
+    border-bottom: 1px solid var(--text);
+    padding-bottom: 6px;
+    font-size: 12px;
+}
+/* 07. Contact와 푸터 */
+.contact {
+    border-top: 1px solid var(--line);
+    padding-bottom: 140px;
+}
+.contact h2 {
+    margin: 28px 0;
+    font-size: clamp(48px, 7.4vw, 120px);
+}
+.contact > p {
+    color: var(--muted);
+}
+.email-button {
+    margin-top: 55px;
+    padding: 12px 0 18px;
+    border: 0;
+    border-bottom: 1px solid var(--text);
+    background: none;
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 70px;
+    font-size: clamp(21px, 2.5vw, 37px);
+    letter-spacing: -.03em;
+}
+.copy-icon {
+    font-size: 24px;
+}
+.copy-feedback {
+    min-height: 20px;
+    font-size: 13px;
+}
+.footer {
+    border-top: 1px solid var(--line);
+    padding: 27px clamp(24px, 6vw, 116px);
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 11px;
+    letter-spacing: .07em;
+    color: var(--muted);
+}
+/* 08. 반응형: 태블릿과 모바일 */
+@media (max-width: 1100px) {
+    .about-grid {
+        gap: 45px;
+    }
+    .about-profile {
+        grid-template-columns: 1fr;
+    }
+    .portrait {
+        max-width: 260px;
+    }
+}
+@media (max-width: 650px) {
+    .header {
+        height: 70px;
+        padding: 0 20px;
+    }
+    .logo {
+        width: 57px;
+    }
+    .nav {
+        gap: 15px;
+    }
+    .nav a {
+        font-size: 12px;
+    }
+    .theme-toggle svg {
+        width: 20px;
+    }
+    .hero {
+        min-height: 560px;
+    }
+    .hero-content {
+        padding: 0 22px 150px;
+    }
+    .hero h1 {
+        font-size: clamp(53px, 13vw, 85px);
+    }
+    .hero-caption {
+        max-width: 260px;
+        line-height: 1.6;
+    }
+    .section {
+        padding: 95px 22px;
+    }
+    .section-heading {
+        margin-bottom: 42px;
+    }
+    .work-grid, .about-grid {
+        grid-template-columns: 1fr;
+    }
+    .work-grid {
+        gap: 43px;
+    }
+    .work-info h3 {
+        font-size: 19px;
+    }
+    .work-info span {
+        font-size: 10px;
+    }
+    .about-grid {
+        gap: 45px;
+    }
+/* 모바일 ABOUT 프로필 배치 */
+    .about-profile {
+        display: grid;
+
+/* 사진을 위에, 자기소개를 아래에 배치 */
+        grid-template-columns: 1fr;
+
+        gap: 25px;
+    }
+
+/* 모바일 프로필 사진 크기 */
+    .portrait {
+        width: 180px;
+        max-width: 100%;
+        aspect-ratio: 3/4;
+    }
+
+/* 자기소개 글씨 */
+    .about-copy {
+        min-width: 0;
+    }
+    .about-copy h3 {
+        font-size: 20px;
+    }
+    .about-copy p {
+        font-size: 13px;
+    }
+    .email-button {
+        gap: 25px;
+    }
+    .footer {
+        padding: 25px 22px;
+        font-size: 9px;
+    }
+}
+@media (max-width: 380px) {
+    .about-profile {
+        grid-template-columns: 1fr;
+    }
+    .nav {
+        gap: 11px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
+/* 09. 스크롤 시 로고 변경: JS가 header에 scrolled 클래스를 추가합니다. */
+.logo .logo-default {
+    display: block;
+}
+.logo .logo-scrolled {
+    display: none;
+}
+/* 라이트모드에서 스크롤했을 때만 남색 로고로 전환 */
+body:not(.dark) .header.scrolled .logo .logo-default {
+    display: none;
+}
+body:not(.dark) .header.scrolled .logo .logo-scrolled {
+    display: block;
+}
+
+/* 다크모드에서는 스크롤 여부와 상관없이 기존 흰색 로고 유지 */
+body.dark .header .logo .logo-default {
+    display: block;
+}
+body.dark .header .logo .logo-scrolled {
+    display: none;
+}
+/* 10. 밝은 물결 위에서 메뉴 가독성 확보 */
+.header:not(.scrolled) .nav a {
+    text-shadow: 0 1px 5px rgba(10,45,75,.35);
+}
+
+/* ==========================================
+   HERO 메인 배경 영상
+========================================== */
+
+/* 영상이 들어가는 메인 영역 */
+.hero {
+    position: relative;
+    overflow: hidden;
+}
+
+/* 메인 배경 영상 */
+.hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    /* 화면을 빈틈없이 채우기 */
+    object-fit: cover;
+    object-position: center;
+
+    /* 글씨 뒤쪽에 배치 */
+    z-index: 0;
+
+    /* 영상 위에서 클릭 방해하지 않기 */
+    pointer-events: none;
+}
+
+/* 기존 메인 타이틀을 영상 위에 표시 */
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
